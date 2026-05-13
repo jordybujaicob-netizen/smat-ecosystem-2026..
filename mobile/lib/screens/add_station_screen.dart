@@ -1,52 +1,33 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../models/estacion.dart';
 
-class AddEstacionScreen extends StatefulWidget {
-  const AddEstacionScreen({super.key});
-
+class AddStationScreen extends StatefulWidget {
   @override
-  State<AddEstacionScreen> createState() => _AddEstacionScreenState();
+  _AddStationScreenState createState() => _AddStationScreenState();
 }
 
-class _AddEstacionScreenState extends State<AddEstacionScreen> {
-  final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _ubicacionController = TextEditingController();
+class _AddStationScreenState extends State<AddStationScreen> {
+  final _nombreController = TextEditingController();
+  final _ubicacionController = TextEditingController();
   final ApiService _apiService = ApiService();
-  bool _cargando = false;
+  bool _isLoading = false;
 
   void _guardar() async {
-    if (_nombreController.text.trim().isEmpty || _ubicacionController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Completa todos los campos")),
-      );
-      return;
-    }
-
-    setState(() => _cargando = true);
-
+    if (_nombreController.text.isEmpty || _ubicacionController.text.isEmpty) return;
+    setState(() => _isLoading = true);
     try {
-      bool success = await _apiService.createEstacion(
-        _nombreController.text.trim(),
-        _ubicacionController.text.trim(),
+      final nueva = Estacion(
+        nombre: _nombreController.text,
+        ubicacion: _ubicacionController.text,
+        valor: 0,
       );
-
-      if (success) {
-        if (mounted) Navigator.pop(context, true);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Error al guardar")),
-          );
-        }
-      }
+      await _apiService.createEstacion(nueva);
+      if (mounted) Navigator.pop(context);
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Error de conexión")),
-        );
-      }
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error al guardar")));
     } finally {
-      if (mounted) setState(() => _cargando = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -58,22 +39,10 @@ class _AddEstacionScreenState extends State<AddEstacionScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            TextField(
-              controller: _nombreController,
-              decoration: const InputDecoration(labelText: "Nombre de la Estación"),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _ubicacionController,
-              decoration: const InputDecoration(labelText: "Ubicación"),
-            ),
-            const SizedBox(height: 25),
-            _cargando 
-              ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: _guardar,
-                  child: const Text("Guardar Estación"),
-                ),
+            TextField(controller: _nombreController, decoration: const InputDecoration(labelText: "Nombre")),
+            TextField(controller: _ubicacionController, decoration: const InputDecoration(labelText: "Ubicación")),
+            const SizedBox(height: 20),
+            _isLoading ? const CircularProgressIndicator() : ElevatedButton(onPressed: _guardar, child: const Text("Guardar")),
           ],
         ),
       ),

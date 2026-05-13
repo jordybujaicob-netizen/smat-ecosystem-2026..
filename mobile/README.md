@@ -1,16 +1,17 @@
-# mobile
+# Ecosistema SMAT - Monorepo
 
-A new Flutter project.
 
-## Getting Started
+## Requisitos
+- Python 3.10+
+- Flutter 3.x
+- Git
 
-This project is a starting point for a Flutter application.
+## Ejecución del Backend
+1. Entrar a `backend/`
+2. Instalar: `pip install -r requirements.txt`
+3. Correr: `fastapi dev app/main.py --host 0.0.0.0`
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Ejecución del Móvil
+1. Entrar a `mobile/`
+2. Configurar la IP en `api_service.dart`.
+3. Correr: `flutter run`

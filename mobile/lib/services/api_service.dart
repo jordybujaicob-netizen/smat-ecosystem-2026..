@@ -1,80 +1,38 @@
 import 'dart:convert';
-import 'dart:async'; // Necesario para el timeout
 import 'package:http/http.dart' as http;
 import '../models/estacion.dart';
-import 'auth_service.dart';
 
 class ApiService {
   final String baseUrl = "http://127.0.0.1:8000";
 
-  // Obtener estaciones con Manejo de Errores (Punto 1 del PDF 7.1)
   Future<List<Estacion>> fetchEstaciones() async {
-    try {
-      final token = await AuthService().getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/estaciones/'),
-        headers: {'Authorization': 'Bearer $token'},
-      ).timeout(const Duration(seconds: 5)); // Evita esperas infinitas
-
-      if (response.statusCode == 200) {
-        List data = json.decode(response.body);
-        return data.map((e) => Estacion.fromJson(e)).toList();
-      } else {
-        throw Exception('Error del servidor: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Evita que la App se cierre si el servidor cae
-      throw Exception('No se pudo conectar con SMAT. ¿Está el servidor activo?');
+    final response = await http.get(Uri.parse('$baseUrl/estaciones/'));
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      return body.map((item) => Estacion.fromJson(item)).toList();
     }
+    throw Exception("Error");
   }
 
-  // Crear Estación con robustez
-  Future<bool> createEstacion(String nombre, String ubicacion) async {
-    try {
-      final token = await AuthService().getToken();
-      final response = await http.post(
-        Uri.parse('$baseUrl/estaciones/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({'nombre': nombre, 'ubicacion': ubicacion}),
-      ).timeout(const Duration(seconds: 5));
-      return response.statusCode == 201 || response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  Future<void> eliminarEstacion(int id) async {
+    final response = await http.delete(Uri.parse('$baseUrl/estaciones/$id'));
+    if (response.statusCode != 200) throw Exception("Error al eliminar");
   }
 
-  // Editar Estación con robustez
-  Future<bool> editarEstacion(int id, String nombre, String ubicacion) async {
-    try {
-      final token = await AuthService().getToken();
-      final response = await http.put(
-        Uri.parse('$baseUrl/estaciones/$id'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({'nombre': nombre, 'ubicacion': ubicacion}),
-      ).timeout(const Duration(seconds: 5));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  Future<void> editarEstacion(Estacion est) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/estaciones/${est.id}'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(est.toJson()),
+    );
+    if (response.statusCode != 200) throw Exception("Error al editar");
   }
 
-  // Eliminar Estación con robustez
-  Future<bool> eliminarEstacion(int id) async {
-    try {
-      final token = await AuthService().getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/estaciones/$id'),
-        headers: {'Authorization': 'Bearer $token'},
-      ).timeout(const Duration(seconds: 5));
-      return response.statusCode == 200;
-    } catch (e) {
-      return false;
-    }
+  Future<void> createEstacion(Estacion est) async {
+    await http.post(
+      Uri.parse('$baseUrl/estaciones/'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(est.toJson()),
+    );
   }
 }
