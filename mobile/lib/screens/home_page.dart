@@ -15,7 +15,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("SMAT - Estaciones"),
-        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => setState(() {}))],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh), 
+            onPressed: () => setState(() {})
+          )
+        ],
       ),
       body: FutureBuilder<List<Estacion>>(
         future: _apiService.fetchEstaciones(),
@@ -49,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(color: colorValor, fontWeight: FontWeight.bold, fontSize: 18)
                   ),
                   onTap: () {
-                    // Al presionar te lleva a editar (usa la misma pantalla de añadir o una de editar)
+                    // PASAMOS LA ESTACIÓN PARA EDITAR
                     Navigator.pushNamed(context, '/add', arguments: est).then((_) => setState(() {}));
                   },
                 ),

@@ -4,18 +4,13 @@ class Estacion {
   final String ubicacion;
   final int valor;
 
-  Estacion({
-    this.id,
-    required this.nombre,
-    required this.ubicacion,
-    this.valor = 0,
-  });
+  Estacion({this.id, required this.nombre, required this.ubicacion, required this.valor});
 
   factory Estacion.fromJson(Map<String, dynamic> json) {
     return Estacion(
       id: json['id'],
-      nombre: json['nombre'] ?? '',
-      ubicacion: json['ubicacion'] ?? '',
+      nombre: json['nombre'],
+      ubicacion: json['ubicacion'],
       valor: json['valor'] ?? 0,
     );
   }

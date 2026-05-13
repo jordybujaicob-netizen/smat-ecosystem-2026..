@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'SMAT Ecosystem',
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
+        colorSchemeSeed: Colors.blue,
       ),
       home: FutureBuilder<String?>(
         future: AuthService().getToken(),
@@ -24,11 +24,10 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(body: Center(child: CircularProgressIndicator()));
           }
-          // Si no hay token, va al Login
-          if (snapshot.data == null) {
-            return const LoginScreen();
+          if (snapshot.data != null) {
+            return HomePage();
           }
-          return HomePage();
+          return const LoginScreen();
         },
       ),
       routes: {

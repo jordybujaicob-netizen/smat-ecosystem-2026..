@@ -13,10 +13,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
 class Estacion(BaseModel):
     id: int | None = None
     nombre: str
@@ -24,15 +20,9 @@ class Estacion(BaseModel):
     valor: int = 0
 
 db_estaciones = [
-    {"id": 1, "nombre": "Estacion norte", "ubicacion": "norte", "valor": 8},
+    {"id": 1, "nombre": "Estacion Norte", "ubicacion": "Norte", "valor": 8},
     {"id": 2, "nombre": "Fisi-Test", "ubicacion": "Sistemas", "valor": 69}
 ]
-
-@app.post("/login")
-async def login(data: LoginRequest):
-    if data.username == "admin" and data.password == "admin":
-        return {"access_token": "token123", "token_type": "bearer"}
-    raise HTTPException(status_code=401)
 
 @app.get("/estaciones/", response_model=List[Estacion])
 async def get_estaciones():
@@ -42,11 +32,18 @@ async def get_estaciones():
 async def create_estacion(est: Estacion):
     nueva = est.dict()
     nueva["id"] = len(db_estaciones) + 1
-    if nueva["valor"] == 0: 
-        import random
-        nueva["valor"] = random.randint(1, 100)
     db_estaciones.append(nueva)
     return nueva
+
+# --- ESTO ES LO QUE FALTA PARA GUARDAR CAMBIOS ---
+@app.put("/estaciones/{id}", response_model=Estacion)
+async def update_estacion(id: int, est: Estacion):
+    for i, e in enumerate(db_estaciones):
+        if e["id"] == id:
+            db_estaciones[i] = est.dict()
+            db_estaciones[i]["id"] = id # Asegurar que el ID no cambie
+            return db_estaciones[i]
+    raise HTTPException(status_code=404, detail="No encontrada")
 
 @app.delete("/estaciones/{id}")
 async def delete_estacion(id: int):

@@ -11,21 +11,7 @@ class ApiService {
       List<dynamic> body = jsonDecode(response.body);
       return body.map((item) => Estacion.fromJson(item)).toList();
     }
-    throw Exception("Error");
-  }
-
-  Future<void> eliminarEstacion(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/estaciones/$id'));
-    if (response.statusCode != 200) throw Exception("Error al eliminar");
-  }
-
-  Future<void> editarEstacion(Estacion est) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/estaciones/${est.id}'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(est.toJson()),
-    );
-    if (response.statusCode != 200) throw Exception("Error al editar");
+    throw Exception("Error al cargar");
   }
 
   Future<void> createEstacion(Estacion est) async {
@@ -34,5 +20,21 @@ class ApiService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(est.toJson()),
     );
+  }
+
+  // --- CORRECCIÓN PARA ACTUALIZAR ---
+  Future<void> editarEstacion(Estacion est) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/estaciones/${est.id}'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(est.toJson()),
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Error del servidor: ${response.body}");
+    }
+  }
+
+  Future<void> eliminarEstacion(int id) async {
+    await http.delete(Uri.parse('$baseUrl/estaciones/$id'));
   }
 }
