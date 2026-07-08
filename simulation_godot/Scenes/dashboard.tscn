@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://duonk16upy0qp"]
+
+[ext_resource type="PackedScene" uid="uid://ktm7k0co2o7l" path="res://addons/mqtt/mqtt.tscn" id="1_jhyq6"]
+[ext_resource type="Script" uid="uid://mh25xypdptvd" path="res://Dashboard.gd" id="1_pyu07"]
+[ext_resource type="Texture2D" uid="uid://cbev6x5k3f0u5" path="res://Assets/mapa.jpg" id="3_vkjem"]
+
+[node name="Dashboard" type="Node2D"]
+script = ExtResource("1_pyu07")
+
+[node name="MQTTClient" parent="." instance=ExtResource("1_jhyq6")]
+
+[node name="Estacion_1" type="ColorRect" parent="."]
+offset_left = 209.0
+offset_top = 501.0
+offset_right = 251.0
+offset_bottom = 528.0
+color = Color(1.504086e-06, 0.35272616, 0.1226281, 1)
+
+[node name="Label" type="Label" parent="Estacion_1"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "0 cm"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="Mapa" type="Sprite2D" parent="."]
+z_index = -10
+position = Vector2(329, 438)
+texture = ExtResource("3_vkjem")

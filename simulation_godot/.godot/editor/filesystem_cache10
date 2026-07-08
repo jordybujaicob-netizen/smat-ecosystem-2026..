@@ -1,0 +1,11 @@
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1783480087
+Dashboard.gd::GDScript::858410946355160353::1783479392::0::1::::<>Node2D<><>0<>0<><>::
+::res://addons/::1783478034
+::res://addons/mqtt/::1783478034
+mqtt.gd::GDScript::5776701378745579950::1783478034::0::1::::<>Node<><>0<>0<><>::
+mqtt.tscn::PackedScene::741897926989883707::1783478034::0::1::::<><><>0<>0<><>::res://addons/mqtt/mqtt.gd
+::res://Assets/::1783480084
+mapa.jpg::CompressedTexture2D::4852619393372804690::1783479970::1783480097::1::::<><><>0<>0<>5416afdbad19cafe2e82b0f141ca272f<>res://.godot/imported/mapa.jpg-395af2a96158e1de834ae0ddf5c29559.ctex::
+::res://Scenes/::1783479392
+dashboard.tscn::PackedScene::8592748805667567619::1783479392::0::1::::<><><>0<>0<><>::uid://ktm7k0co2o7l::::res://addons/mqtt/mqtt.tscn<>uid://mh25xypdptvd::::res://Dashboard.gd
